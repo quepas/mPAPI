@@ -19,6 +19,6 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[]) {
                            "Error message: %s.", PAPI_strerror(result));
         }
     } else {
-        mexPrintf("Counters are not running. Execute MAPI_create first.\n");
+        mexPrintf("Counters are unregistered and not running. Execute MAPI_register first.\n");
     }
 }
