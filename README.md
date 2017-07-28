@@ -10,9 +10,10 @@ mex -I/usr/local/include MAPI_register.c -L/usr/local/lib/ -lpapi -output MAPI_r
 mex -I/usr/local/include MAPI_tic.c -L/usr/local/lib/ -lpapi -output MAPI_tic
 mex -I/usr/local/include MAPI_toc.c -L/usr/local/lib/ -lpapi -output MAPI_toc
 ``` 
+Where path ``/usr/local/include`` contains ``papi.h`` header and path ``/usr/local/lib/`` contains ``libpapi.so`` static library. 
 ## Usage
 
-1. Register hardware performance monitoring counters (using _preset_ and _native_ events):
+1. Register hardware performance monitoring counters (using _preset_ or _native_ events):
 ```
 >> MAPI_register('FP_ARITH:SCALAR_SINGLE', 'L1D:REPLACEMENT', 'PAPI_L2_ICA')
 ```
