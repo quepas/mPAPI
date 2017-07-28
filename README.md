@@ -1,5 +1,5 @@
 # MAPI
-MAPI is a simple MATLAB API for PAPI (5.5.1 and beyond). Just PAPI MAPI API for PAPI.
+MAPI is a simple MATLAB API for [PAPI](http://icl.cs.utk.edu/papi/) (5.5.1 and beyond). Just PAPI MAPI API for PAPI.
 
 ## Installation
 
