@@ -4,7 +4,9 @@
 
 #include "MAPI_status.h"
 
-/* PAPI_toc.c - start counters */
+/* 
+ *  MAPI_toc -- read values from hardware performance monitoring counters.
+ */
 void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[]) {
     int num_counters = MAPI_getNumRunningCounters();
     if (num_counters > 0) {
