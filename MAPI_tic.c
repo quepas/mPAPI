@@ -4,10 +4,10 @@
 
 #include "MAPI_status.h"
 
-/* 
+/*
  *  MAPI_tic -- resets hardware performance monitoring counters.
  */
-void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[]) {   
+void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[]) {
     int num_counters = MAPI_getNumRunningCounters();
     if (num_counters > 0) {
         int result;

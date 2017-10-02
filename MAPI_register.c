@@ -5,9 +5,9 @@
 #include "MAPI_status.h"
 
 /*
- *  MAPI_register -- registers and starts hardware performance monitoring counters. 
- *                   Each input argument is a generic event name 
- *                   or cpu-specific event name.   
+ *  MAPI_register -- registers and starts hardware performance monitoring counters.
+ *                   Each input argument is a generic event name
+ *                   or cpu-specific event name.
  */
 void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[]) {
     int papi_num_counters = PAPI_num_counters();
