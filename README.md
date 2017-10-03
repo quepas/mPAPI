@@ -31,4 +31,4 @@ ans = [15   662645   648020]
 ## Comments
 
 * The number of hardware counters available on the system defines the upper limit of counters you can register using ``MAPI_register`` function.
-
+* Not all hardware counters can be mixed and used simultaneously.
