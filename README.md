@@ -1,10 +1,10 @@
-# MAPI
-MAPI is a simple MATLAB API for [PAPI](http://icl.cs.utk.edu/papi/) (5.5.1 and beyond). Just PAPI MAPI API for PAPI.
+# mPAPI
+mPAPI is a simple MATLAB API for [PAPI](http://icl.cs.utk.edu/papi/) (5.5.1 and beyond). Just MATLAB API for PAPI.
 
 ## Installation
 
 1. Install [PAPI >=5.5.1](http://icl.cs.utk.edu/papi/)
-2. Build MAPI functions: MAPI_register, MAPI_tic, MAPI_toc with MEX-compatible compiler:
+2. Build mPAPI functions: MAPI_register, MAPI_tic, MAPI_toc with MEX-compatible compiler:
 ```
 mex -I/usr/local/include MAPI_register.c -L/usr/local/lib/ -lpapi -output MAPI_register
 mex -I/usr/local/include MAPI_tic.c -L/usr/local/lib/ -lpapi -output MAPI_tic
