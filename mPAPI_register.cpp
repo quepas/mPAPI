@@ -8,6 +8,7 @@
  *  mPAPI_register -- registers and starts hardware performance monitoring counters.
  *  Parameters:
  *      * performance_events : cell array -- stores the names of preset or native events to measure
+ *      * multiplexFlag? : logical -- turn on/off the multiplexing
  */
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
@@ -18,7 +19,18 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     int papi_num_counters = PAPI_num_counters();
     size_t num_events = mxGetNumberOfElements(prhs[0]);
 
-    if (num_events < 1 || num_events > papi_num_counters)
+    // Check multiplexing flag
+    bool multiplexFlag = false;
+    if (nrhs == 2 && mxIsLogicalScalarTrue(prhs[1]))
+    {
+        multiplexFlag = true;
+        if ((retval = PAPI_multiplex_init()) != PAPI_OK)
+        {
+            mPAPI_mex_error_with_reason("Initialization of multiplex failed", retval);
+        }
+    }
+
+    if (!multiplexFlag && (num_events < 1 || num_events > papi_num_counters))
     {
         char error[PAPI_2MAX_STR_LEN];
         sprintf(error, "mPAPI_register takes cell array with 1 to %d "
@@ -28,32 +40,25 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         mexErrMsgTxt(error);
     }
 
-    // Function returns a vector of PAPI event ids
     std::vector<int> event_codes;
-    // Convert event names to codes
-    for (int i = 0; i < num_events; ++i)
-    {
-        mxArray *event_name_ptr = mxGetCell(prhs[0], i);
-        if (mxIsChar(event_name_ptr))
-        {
-            char *event_name = mxArrayToString(event_name_ptr);
-            int event_code;
-            if ((retval = PAPI_event_name_to_code(event_name, &event_code)) != PAPI_OK)
-            {
-                mPAPI_mex_warn_with_reason("Failed to convert event name to code", retval);
-            }
-            else
-            {
-                event_codes.push_back(event_code);
-            }
-        }
-    }
+    mPAPI_event_names_cell_to_codes(prhs[0], num_events, event_codes);
 
     // Create an event set
     int event_set = PAPI_NULL;
     if ((retval = PAPI_create_eventset(&event_set)) != PAPI_OK)
     {
         mPAPI_mex_error_with_reason("Failed to create an event set.", retval);
+    }
+    if (multiplexFlag)
+    {
+        if ((retval = PAPI_assign_eventset_component(event_set, 0)) != PAPI_OK)
+        {
+            mPAPI_mex_error_with_reason("Failed to assign a component to the event set.", retval);
+        }
+        if ((retval = PAPI_set_multiplex(event_set)) != PAPI_OK)
+        {
+            mPAPI_mex_error_with_reason("Failed to setup the event set as multiplexed.", retval);
+        }
     }
     // Convert vector to array
     int *counters = (int *)mxCalloc(event_codes.size(), sizeof(int));
