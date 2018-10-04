@@ -13,13 +13,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     {
         mexErrMsgTxt("Register performance events before reading them.");
     }
-    int result;
-    if ((result = PAPI_start(event_set)) != PAPI_OK)
+    int retval;
+    if ((retval = PAPI_start(event_set)) != PAPI_OK)
     {
-        char error[PAPI_HUGE_STR_LEN];
-        sprintf(error,
-                "Failed to start performance counters. Reason: %s.",
-                PAPI_strerror(result));
-        mexErrMsgTxt(error);
+        mPAPI_mex_error_with_reason("Failed to start performance counters", retval);
     }
 }

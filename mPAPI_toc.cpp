@@ -18,13 +18,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     plhs[0] = mxCreateNumericMatrix(1, event_set_size, mxINT64_CLASS, mxREAL);
     long long *counter_values = (long long *)mxGetData(plhs[0]);
 
-    int result;
-    if ((result = PAPI_stop(event_set, counter_values)) != PAPI_OK)
+    int retval;
+    if ((retval = PAPI_stop(event_set, counter_values)) != PAPI_OK)
     {
-        char error[PAPI_HUGE_STR_LEN];
-        sprintf(error,
-                "Failed to stop and read PAPI counters. Reason: %s",
-                PAPI_strerror(result));
-        mexErrMsgTxt(error);
+        mPAPI_mex_error_with_reason("Failed to stop and read PAPI counters", retval);
     }
 }
