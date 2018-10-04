@@ -33,7 +33,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
    {
       if (IS_NATIVE(event_id))
       {
-         char event_code[PAPI_MIN_STR_LEN];
+         char event_code[PAPI_MAX_STR_LEN];
          if ((retval = PAPI_event_code_to_name(event_id, event_code)) != PAPI_OK)
          {
             mPAPI_mex_warn_with_reason("Failed to convert event code to name.", retval);

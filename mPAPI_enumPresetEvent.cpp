@@ -15,18 +15,18 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
    int event_id = 0 | PAPI_PRESET_MASK;
 
    /* For consistency, always ASK FOR the first event, if there is not one then nothing to process */
-   if (PAPI_enum_event(&event_id, PAPI_ENUM_FIRST) != PAPI_OK)
+   if ((retval = PAPI_enum_event(&event_id, PAPI_ENUM_FIRST)) != PAPI_OK)
    {
-      mexErrMsgTxt("Failed to enumerate first performance event.");
+      mPAPI_mex_error_with_reason("Failed to enumerate first performance event.", retval);
    }
 
    std::vector<std::string> event_names;
    do
    {
-      char event_code[PAPI_MIN_STR_LEN];
+      char event_code[PAPI_MAX_STR_LEN];
       if ((retval = PAPI_event_code_to_name(event_id, event_code)) != PAPI_OK)
       {
-         mexWarnMsgTxt("Failed to convert event code to name.");
+         mPAPI_mex_warn_with_reason("Failed to convert event code to name.", retval);
       }
       else
       {
