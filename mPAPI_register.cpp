@@ -2,7 +2,7 @@
 #include "matrix.h"
 #include "papi.h"
 
-#include "mPAPI_status.h"
+#include "mPAPI_utils.hpp"
 
 /*
  *  mPAPI_register -- registers and starts hardware performance monitoring counters.

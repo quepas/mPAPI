@@ -2,8 +2,8 @@
 #include "matrix.h"
 #include "papi.h"
 
-#include "mPAPI_status.h"
-#include "available_events.hpp"
+#include "mPAPI_utils.hpp"
+#include "mPAPI_available_events.hpp"
 
 #include <vector>
 #include <map>

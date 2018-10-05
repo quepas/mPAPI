@@ -1,7 +1,7 @@
 #include <vector>
 #include <string>
 
-#include "mPAPI_status.h"
+#include "mPAPI_utils.hpp"
 #include "mex.h"
 #include "matrix.h"
 #include "papi.h"

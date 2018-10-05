@@ -1,7 +1,7 @@
 #include <mex.h>
 #include <papi.h>
 
-#include "mPAPI_status.h"
+#include "mPAPI_utils.hpp"
 
 /*
  *  mPAPI_tic -- start hardware performance monitoring counters.
