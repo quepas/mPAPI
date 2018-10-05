@@ -20,9 +20,10 @@ void fillOneEventSet(std::multimap<int, int> preset_max_avail,
     }
     int max_counters = PAPI_num_counters();
     int in_event_set = 1;
-    for (auto &pair : preset_max_avail)
+
+    for (std::multimap<int, int>::iterator it = preset_max_avail.begin(); it != preset_max_avail.end(); ++it)
     {
-        int event_id = pair.second;
+        int event_id = it->second;
         PAPI_event_info_t info;
         PAPI_get_event_info(event_id, &info);
         // Any space left in the EventSet?
@@ -58,7 +59,7 @@ void countAvailability(std::vector<int> event_codes,
         // Check how many is compatible
         int availableSize = PAPI_num_events(event_set);
         PAPI_cleanup_eventset(event_set);
-        preset_max_avail.insert({availableSize, event_codes[i]});
+        preset_max_avail.insert(std::make_pair(availableSize, event_codes[i]));
     }
 }
 
