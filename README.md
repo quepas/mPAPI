@@ -32,10 +32,10 @@ ans = [0   1559   4032]
 ```
 ## Problems
 
-In order to set older version of _GCC_ (newer might not be supported), run _mex_ as follow:
+In order to set an older version of _GCC_ (newer might not be supported), run _mex_ as follow:
 
 ```matlab
-mex GCC='/usr/bin/gcc-4.9' ...
+mex GXX='/usr/bin/gcc-X.X' ... % R2013a/R2015b/R2018b
 ```
 
 ## Comments
