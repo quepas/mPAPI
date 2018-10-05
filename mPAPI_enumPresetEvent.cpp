@@ -1,10 +1,9 @@
 #include <vector>
 #include <string>
-
+#include <mex.h>
+#include <matrix.h>
+#include <papi.h>
 #include "mPAPI_utils.hpp"
-#include "mex.h"
-#include "matrix.h"
-#include "papi.h"
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {

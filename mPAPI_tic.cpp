@@ -1,6 +1,5 @@
 #include <mex.h>
 #include <papi.h>
-
 #include "mPAPI_utils.hpp"
 
 /*

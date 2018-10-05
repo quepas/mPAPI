@@ -4,16 +4,15 @@
 #include <algorithm>
 #include <vector>
 #include <string>
-#include "mex.h"
-#include "papi.h"
+#include <mex.h>
+#include <papi.h>
 
 void mPAPI_remove_event_code(std::vector<int> &event_codes, int event_code_to_remove)
 {
-    event_codes.erase(std::find(event_codes
-                                    .begin(),
-                                event_codes
-                                    .end(),
-                                event_code_to_remove));
+    event_codes.erase(
+        std::find(event_codes.begin(),
+                  event_codes.end(),
+                  event_code_to_remove));
 }
 
 void mPAPI_set_event_set(int event_set_id)

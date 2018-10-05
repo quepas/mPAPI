@@ -1,12 +1,10 @@
-#include "mex.h"
-#include "matrix.h"
-#include "papi.h"
-
+#include <map>
+#include <vector>
+#include <mex.h>
+#include <matrix.h>
+#include <papi.h>
 #include "mPAPI_utils.hpp"
 #include "mPAPI_available_events.hpp"
-
-#include <vector>
-#include <map>
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {

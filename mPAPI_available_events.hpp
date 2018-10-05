@@ -1,11 +1,11 @@
 #ifndef _MPAPI_AVAILABLE_EVENTS_
 #define _MPAPI_AVAILABLE_EVENTS_
 
-#include <papi.h>
-
 #include <algorithm>
 #include <map>
 #include <vector>
+#include <papi.h>
+#include "mPAPI_utils.hpp"
 
 // Function definitions
 void fillOneEventSet(std::multimap<int, int> preset_max_avail,
