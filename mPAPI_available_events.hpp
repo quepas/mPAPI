@@ -21,7 +21,7 @@ void fillOneEventSet(std::multimap<int, int> preset_max_avail,
     int max_counters = PAPI_num_counters();
     int in_event_set = 1;
 
-    for (std::multimap<int, int>::iterator it = preset_max_avail.begin(); it != preset_max_avail.end(); ++it)
+    for (std::multimap<int, int>::reverse_iterator it = preset_max_avail.rbegin(); it != preset_max_avail.rend(); ++it)
     {
         int event_id = it->second;
         PAPI_event_info_t info;
@@ -43,6 +43,7 @@ void countAvailability(std::vector<int> event_codes,
 {
     int retval;
     int event_set = PAPI_NULL;
+
     if ((retval = PAPI_create_eventset(&event_set)) != PAPI_OK)
     {
         mPAPI_mex_error_with_reason("Failed creating an event set", retval);
@@ -50,17 +51,26 @@ void countAvailability(std::vector<int> event_codes,
     // Check each event
     for (int i = 0; i < event_codes.size(); ++i)
     {
-        PAPI_add_event(event_set, event_codes[i]);
-        // By looking how many other events are compatible with it
-        for (int k = i + 1; k < event_codes.size(); ++k)
+        if (PAPI_add_event(event_set, event_codes[i]) == PAPI_OK)
         {
-            PAPI_add_event(event_set, event_codes[k]);
+            // By looking how many other events are compatible with it
+            int availableSize = 0;
+            for (int k = 0; k < event_codes.size(); ++k)
+            {
+                if (i == k)
+                    continue;
+                if (PAPI_add_event(event_set, event_codes[k]) == PAPI_OK)
+                {
+                    ++availableSize;
+                    PAPI_remove_event(event_set, event_codes[k]);
+                }
+            }
+            // Check how many is compatible
+            preset_max_avail.insert(std::make_pair(availableSize, event_codes[i]));
         }
-        // Check how many is compatible
-        int availableSize = PAPI_num_events(event_set);
         PAPI_cleanup_eventset(event_set);
-        preset_max_avail.insert(std::make_pair(availableSize, event_codes[i]));
     }
+    PAPI_destroy_eventset(&event_set);
 }
 
 // ~_AVAILABLE_EVENTS_
