@@ -11,6 +11,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     if (!PAPI_is_initialized())
         PAPI_library_init(PAPI_VER_CURRENT);
 
+    if (!mexIsLocked())
+    {
+        mexLock();
+    }
+
     size_t num_events = mxGetNumberOfElements(prhs[0]);
     int max_counters = PAPI_num_counters();
     std::vector<int> event_codes;

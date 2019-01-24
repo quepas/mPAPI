@@ -8,6 +8,10 @@
  */
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
+    if (!mexIsLocked())
+    {
+        mexLock();
+    }
     int event_set = mPAPI_get_event_set();
     if (event_set == PAPI_NULL)
     {

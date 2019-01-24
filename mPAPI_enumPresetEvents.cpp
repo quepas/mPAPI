@@ -10,6 +10,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
    if (!PAPI_is_initialized())
       PAPI_library_init(PAPI_VER_CURRENT);
 
+   if (!mexIsLocked())
+   {
+      mexLock();
+   }
+
    int retval;
    int event_id = 0 | PAPI_PRESET_MASK;
 
