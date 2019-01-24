@@ -2,6 +2,11 @@
 
 Simple [**MATLAB**](https://www.mathworks.com/products/matlab.html) API for [**PAPI**](http://icl.cs.utk.edu/papi/) (Performance Application Programming Interface).
 
+## Properties
+
+* Hardware counters are measured for the parent and child threads (e.g. when using parallelized functions like `sum`). Unfortunately, there is no way to differentiate which counters come from which thread.
+* Each function in the MEX-file is locked (once loaded it can't be erased using `clear` function in MATLAB environment)
+
 ## Installation
 
 1. Install [PAPI >=5.5.1](http://icl.cs.utk.edu/papi/)
@@ -52,7 +57,7 @@ ans = {{'PAPI_L1_DCM', 'PAPI_L1_ICM', ...},
 ```
 ## Problems
 
-In order to set an older version of _GCC_ (newer might not be supported), run _mex_ as follows:
+In order to set an older version of _GCC_ (newer might not be supported by MATLAB's MEX compiler), run _mex_ as follows:
 
 ```matlab
 mex GXX='/usr/bin/gcc-X.X' ... % R2013a/R2015b/R2018b
