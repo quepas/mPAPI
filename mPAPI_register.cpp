@@ -1,6 +1,7 @@
 #include <mex.h>
 #include <matrix.h>
 #include <papi.h>
+#include <cstring>
 #include "mPAPI_utils.hpp"
 
 /*
@@ -59,6 +60,21 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
             mPAPI_mex_error_with_reason("Failed to setup the event set as multiplexed.", retval);
         }
     }
+    // Count for children as well (important for multi-thread execution)
+    if (retval = PAPI_assign_eventset_component(event_set, 0) != PAPI_OK)
+    {
+        mPAPI_mex_error_with_reason("Failed to assign an event set to the 0-component.", retval);
+    }
+
+    PAPI_option_t opt;
+    std::memset(&opt, 0x0, sizeof(PAPI_option_t));
+    opt.inherit.inherit = PAPI_INHERIT_ALL;
+    opt.inherit.eventset = event_set;
+    if ((retval = PAPI_set_opt(PAPI_INHERIT, &opt)) != PAPI_OK)
+    {
+        mPAPI_mex_error_with_reason("Failed to inherit events counting to child processes.", retval);
+    }
+
     // Convert vector to array
     int *counters = (int *)mxCalloc(event_codes.size(), sizeof(int));
     for (int i = 0; i < event_codes.size(); ++i)
