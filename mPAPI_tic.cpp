@@ -1,5 +1,6 @@
 #include <mex.h>
 #include <papi.h>
+#include <cmath>
 #include "mPAPI_utils.hpp"
 
 /*
@@ -11,7 +12,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     {
         mexLock();
     }
-    int event_set = mPAPI_get_event_set();
+    int event_set = static_cast<int>(round(mxGetScalar(prhs[0])));
+    //int event_set = mPAPI_get_event_set();
     if (event_set == PAPI_NULL)
     {
         mexErrMsgTxt("Register performance events before reading them.");
