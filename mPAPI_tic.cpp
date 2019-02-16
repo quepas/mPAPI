@@ -12,15 +12,18 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     {
         mexLock();
     }
-    int event_set = static_cast<int>(round(mxGetScalar(prhs[0])));
-    //int event_set = mPAPI_get_event_set();
-    if (event_set == PAPI_NULL)
+    double *events = mxGetPr(prhs[0]);
+    for (size_t k = 0; k < mxGetNumberOfElements(prhs[0]); ++k)
     {
-        mexErrMsgTxt("Register performance events before reading them.");
-    }
-    int retval;
-    if ((retval = PAPI_start(event_set)) != PAPI_OK)
-    {
-        mPAPI_mex_error_with_reason("Failed to start performance counters", retval);
+        int event_set = static_cast<int>(round(events[k]));
+        if (event_set == PAPI_NULL)
+        {
+            mexErrMsgTxt("Register performance events before reading them.");
+        }
+        int retval;
+        if ((retval = PAPI_start(event_set)) != PAPI_OK)
+        {
+            mPAPI_mex_error_with_reason("Failed to start performance counters", retval);
+        }
     }
 }
