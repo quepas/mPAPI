@@ -100,12 +100,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         mPAPI_mex_error_with_reason("Failed to add performance events to the event set.", retval);
     }
     // Hold id of the event set
-    //mPAPI_set_event_set(event_set);
-
-    /*mxArray *events = mxCreateNumericMatrix(1, num_events, mxINT32_CLASS, mxREAL);
-    mxSetData(events, counters);
-    plhs[0] = mxDuplicateArray(events);
-    mxDestroyArray(events);*/
     mxArray *return_val = mxCreateDoubleScalar(event_set);
     plhs[0] = mxDuplicateArray(return_val);
     mxDestroyArray(return_val);
