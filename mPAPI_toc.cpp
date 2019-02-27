@@ -52,12 +52,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         results.push_back(line);
     }
 
-    // TODO: pack results into a cell array!
     for (unsigned int row = 0; row < K; row++)
     {
         for (unsigned int col = 0; col < event_set_size; ++col)
         {
-            output[row + col * event_set_size] = results[row][col];
+            output[col + row * event_set_size] = results[row][col];
         }
     }
 }
