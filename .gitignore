@@ -53,3 +53,7 @@ dkms.conf
 
 # Compiled MEX
 *.mexa64
+
+# Visual Studio Code
+.vscode/
+
