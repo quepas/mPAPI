@@ -42,6 +42,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         {
             mPAPI_mex_error_with_reason("Failed to stop and read PAPI counters", retval);
         }
+        if ((retval = PAPI_reset(event_set)) != PAPI_OK)
+        {
+            mPAPI_mex_error_with_reason("Failed to reset the event set", retval);
+        }
 
         // Insert into a vector
         std::vector<long long> line;
