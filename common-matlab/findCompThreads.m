@@ -18,7 +18,7 @@ function compThreads = findCompThreads()
     for k = 1:repeats
         % Find threads that perform at least some work
         for thread = spid
-            ev = mPAPI_register({'PAPI_DP_OPS'}, thread);
+            ev = mPAPI_register({'PAPI_TOT_CYC'}, thread);
             mPAPI_tic(ev);
             C = A + B;
             num_ops = mPAPI_toc(ev);
