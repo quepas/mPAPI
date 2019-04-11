@@ -25,22 +25,34 @@ Where directory ``/usr/local/include`` contains ``papi.h`` header and directory 
 ## Usage
 
 1. Register hardware performance monitoring counters (PMC) using _preset_ or _native_ events:
+  * For the current thread/process:
+      ```matlab
+      ev = mPAPI_register({'FP_ARITH:SCALAR_SINGLE', 'L1D:REPLACEMENT', 'PAPI_L2_ICA'})
+      ```
+  * In multiplex mode for the current thread:
+      ```matlab
+      ev = mPAPI_register({'FP_ARITH:SCALAR_SINGLE', 'L1D:REPLACEMENT', 'PAPI_L2_ICA'}, true)
+      ```
+  * For a specific thread/process by PID:
+      ```matlab
+      ev = mPAPI_register({'PAPI_TOT_INS'}, 1234)
+      ```
+3. Start counters for the specific event-set(s):
 ```matlab
->> mPAPI_register({'FP_ARITH:SCALAR_SINGLE', 'L1D:REPLACEMENT', 'PAPI_L2_ICA'})
+mPAPI_tic(ev)
 ```
-2. Register performance counters in multiplex mode:
-```matlab
->> mPAPI_register({'FP_ARITH:SCALAR_SINGLE', 'L1D:REPLACEMENT', 'PAPI_L2_ICA'}, true)
-```
-3. Start counters:
-```matlab
->> mPAPI_tic()
-```
-4. Read counters measurements:
-```matlab
->> mPAPI_toc()
-ans = [0, 1559, 4032]
-```
+4. Read counters measurements 
+  * For the specific event-set:
+      ```matlab
+      >> mPAPI_toc(ev)
+      ans = [0, 1559, 4032]
+      ```
+  * For many event-sets:
+      ```matlab
+      >> mPAPI_toc([ev1, ev2])
+      ans = [0, 1559, 4032;
+             0, 1450, 3999]
+      ````
 5. Enumarate all available native or preset PAPI events:
 ```matlab
 >> mPAPI_enumNativeEvents()

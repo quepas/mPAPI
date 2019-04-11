@@ -2,6 +2,7 @@
 #include <matrix.h>
 #include <papi.h>
 #include <cstring>
+#include <cmath>
 #include "mPAPI_utils.hpp"
 
 /*
@@ -70,6 +71,14 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     {
         mPAPI_mex_error_with_reason("Failed to assign an event set to the 0-component.", retval);
     }
+    if (nrhs == 2 && mxIsDouble(prhs[1]))
+    {
+        unsigned long pid = static_cast<unsigned long>(round(mxGetScalar(prhs[1])));
+        if (retval = PAPI_attach(event_set, pid) != PAPI_OK)
+        {
+            mPAPI_mex_error_with_reason("Failed to attach an event set to the process.", retval);
+        }
+    }
 
     PAPI_option_t opt;
     std::memset(&opt, 0x0, sizeof(PAPI_option_t));
@@ -91,10 +100,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         mPAPI_mex_error_with_reason("Failed to add performance events to the event set.", retval);
     }
     // Hold id of the event set
-    mPAPI_set_event_set(event_set);
-
-    mxArray *events = mxCreateNumericMatrix(1, num_events, mxINT32_CLASS, mxREAL);
-    mxSetData(events, counters);
-    plhs[0] = mxDuplicateArray(events);
-    mxDestroyArray(events);
+    mxArray *return_val = mxCreateDoubleScalar(event_set);
+    plhs[0] = mxDuplicateArray(return_val);
+    mxDestroyArray(return_val);
 }
