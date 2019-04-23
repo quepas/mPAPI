@@ -22,7 +22,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     }
 
     int retval;
-    int papi_num_counters = PAPI_num_counters();
+    int papi_num_counters = PAPI_get_opt(PAPI_MAX_HWCTRS, NULL);
     size_t num_events = mxGetNumberOfElements(prhs[0]);
 
     // Check multiplexing flag

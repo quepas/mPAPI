@@ -18,7 +18,7 @@ void fillOneEventSet(std::multimap<int, int> preset_max_avail,
     {
         mPAPI_mex_error_with_reason("Failed to create an event set", retval);
     }
-    int max_counters = PAPI_num_counters();
+    int max_counters = PAPI_get_opt(PAPI_MAX_HWCTRS, NULL);
     int in_event_set = 1;
 
     for (std::multimap<int, int>::reverse_iterator it = preset_max_avail.rbegin(); it != preset_max_avail.rend(); ++it)
