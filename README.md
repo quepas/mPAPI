@@ -1,11 +1,11 @@
 # mPAPI
 
-Simple [**MATLAB**](https://www.mathworks.com/products/matlab.html) API for [**PAPI**](http://icl.cs.utk.edu/papi/) (Performance Application Programming Interface).
+Simple [**MATLAB**](https://www.mathworks.com/products/matlab.html)/[**Octave**](https://www.gnu.org/software/octave/) API for [**PAPI**](http://icl.cs.utk.edu/papi/) (Performance Application Programming Interface).
 
 ## Properties
 
 * Hardware counters are measured for the parent and child threads (e.g. when using parallelized functions like `sum`). Unfortunately, there is no way to differentiate which counters come from which thread.
-* Each function in the MEX-file is locked (once loaded it can't be erased using `clear` function in MATLAB environment)
+* Each function in the MEX-file is locked (once loaded it can't be erased using `clear` function in MATLAB/Octave environment)
 
 ## Installation
 
