@@ -1,7 +1,6 @@
 #include <map>
 #include <vector>
 #include <mex.h>
-#include <matrix.h>
 #include <papi.h>
 #include "mPAPI_utils.hpp"
 #include "mPAPI_available_events.hpp"
