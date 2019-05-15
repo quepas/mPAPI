@@ -57,3 +57,9 @@ dkms.conf
 # Visual Studio Code
 .vscode/
 
+# Ignore some dirs with generated files
+r2013a/
+r2015b/
+r2018b/
+octave422/
+octave510/
