@@ -7,6 +7,18 @@
 #include <mex.h>
 #include <papi.h>
 
+mxArray *mPAPI_create_int32_scalar(int value)
+{
+    mxArray *mx_value = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+    ((int *)mxGetPr(mx_value))[0] = value;
+    return mx_value;
+}
+
+int mPAPI_get_int32_scalar(mxArray *array)
+{
+    return *((int *)mxGetData(array));
+}
+
 void mPAPI_remove_event_code(std::vector<int> &event_codes, int event_code_to_remove)
 {
     event_codes.erase(
