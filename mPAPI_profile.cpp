@@ -7,6 +7,24 @@
 std::ofstream trace_file;
 int num_events;
 
+std::string prepare_trace_file_header(std::vector<std::string> event_names)
+{
+   std::string str;
+   for (int k = 0; k < event_names.size(); ++k)
+   {
+      str += event_names[k];
+      if (k + 1 != event_names.size())
+      {
+         str += ",";
+      }
+      else
+      {
+         str += "\n";
+      }
+   }
+   return str;
+}
+
 void handler(int EventSet, void *address, long_long overflow_vector, void *context)
 {
    long long counter_values[num_events];
@@ -19,13 +37,28 @@ void handler(int EventSet, void *address, long_long overflow_vector, void *conte
          trace_file << counter_values[0] << std::endl;
          break;
       case 2:
-         trace_file << counter_values[0] << "," << counter_values[1] << std::endl;
+         trace_file << counter_values[0] << ","
+                    << counter_values[1] << std::endl;
          break;
       case 3:
-         trace_file << counter_values[0] << "," << counter_values[1] << "," << counter_values[2] << std::endl;
+         trace_file << counter_values[0] << ","
+                    << counter_values[1] << ","
+                    << counter_values[2] << std::endl;
          break;
       case 4:
-         trace_file << counter_values[0] << "," << counter_values[1] << "," << counter_values[2] << "," << counter_values[3] << std::endl;
+         trace_file << counter_values[0] << ","
+                    << counter_values[1] << ","
+                    << counter_values[2] << ","
+                    << counter_values[3] << std::endl;
+         break;
+      case 5:
+         trace_file << counter_values[0] << ","
+                    << counter_values[1] << ","
+                    << counter_values[2] << ","
+                    << counter_values[3] << ","
+                    << counter_values[4] << std::endl;
+         break;
+      default:
          break;
       }
    }
@@ -42,7 +75,6 @@ void handler(int EventSet, void *address, long_long overflow_vector, void *conte
  */
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
-   // TODO: transfer somehow the handle to the stream
    std::string trace_file_name = mxArrayToString(prhs[3]);
    trace_file.open(trace_file_name);
 
@@ -79,15 +111,18 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
    // Add all events (including the overflow event)
    size_t num_measure_events = mxGetNumberOfElements(prhs[2]);
    std::vector<int> event_codes;
-   mPAPI_event_names_cell_to_codes(prhs[2], num_measure_events, event_codes);
+   std::vector<std::string> event_names;
+   mPAPI_event_names_cell_to_codes(prhs[2], num_measure_events, event_codes, event_names);
    // Decode the overflow event
    char *event_name = mxArrayToString(prhs[0]);
+   event_names.insert(event_names.begin(), event_name);
    int overflow_event;
    if ((retval = PAPI_event_name_to_code(event_name, &overflow_event)) != PAPI_OK)
    {
       mPAPI_mex_warn_with_reason("Failed to convert event name to code", retval);
    }
-
+   // Write header of the trace file
+   trace_file << prepare_trace_file_header(event_names);
    // All events to the set
    event_codes.insert(event_codes.begin(), overflow_event);
    num_events = event_codes.size();

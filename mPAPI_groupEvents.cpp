@@ -18,7 +18,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     size_t num_events = mxGetNumberOfElements(prhs[0]);
     int max_counters = PAPI_get_opt(PAPI_MAX_HWCTRS, NULL);
     std::vector<int> event_codes;
-    mPAPI_event_names_cell_to_codes(prhs[0], num_events, event_codes);
+    std::vector<std::string> event_names;
+    mPAPI_event_names_cell_to_codes(prhs[0], num_events, event_codes, event_names);
 
     std::vector<mxArray *> event_groups;
     while (!event_codes.empty())

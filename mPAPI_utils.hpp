@@ -69,7 +69,7 @@ mxArray *mPAPI_to_string_cell_array(std::vector<std::string> names)
     return native_events;
 }
 
-void mPAPI_event_names_cell_to_codes(const mxArray *names_in_cell, int num_events, std::vector<int> &out_codes)
+void mPAPI_event_names_cell_to_codes(const mxArray *names_in_cell, int num_events, std::vector<int> &out_codes, std::vector<std::string> &out_names)
 {
     if (!mxIsCell(names_in_cell))
     {
@@ -91,6 +91,7 @@ void mPAPI_event_names_cell_to_codes(const mxArray *names_in_cell, int num_event
             else
             {
                 out_codes.push_back(event_code);
+                out_names.push_back(event_name);
             }
         }
     }
