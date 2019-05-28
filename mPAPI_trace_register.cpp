@@ -17,10 +17,6 @@ std::string prepare_trace_file_header(std::vector<std::string> event_names)
       {
          str += ",";
       }
-      else
-      {
-         str += "\n";
-      }
    }
    return str;
 }
@@ -65,26 +61,20 @@ void handler(int EventSet, void *address, long_long overflow_vector, void *conte
 }
 
 /*
- *  mPAPI_register -- registers and starts hardware performance monitoring counters.
+ *  mPAPI_trace_register -- registers new trace (overflow and measured events, overflow threshold)
  *  Parameters:
  *      * overflow_event: just one event name
  *      * overflow_threshold: a number
  *      * performance_events : cell array -- stores the names of preset or native events to measure
  *      * trace file: string
- * TODO: add trace file path
  */
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
    std::string trace_file_name = mxArrayToString(prhs[3]);
-   trace_file.open(trace_file_name);
+   trace_file.open(trace_file_name, std::fstream::app);
 
    if (!PAPI_is_initialized())
       PAPI_library_init(PAPI_VER_CURRENT);
-
-   if (!mexIsLocked())
-   {
-      mexLock();
-   }
 
    /**
     * Create an event set
@@ -122,7 +112,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
       mPAPI_mex_warn_with_reason("Failed to convert event name to code", retval);
    }
    // Write header of the trace file
-   trace_file << prepare_trace_file_header(event_names);
+   //trace_file << prepare_trace_file_header(event_names);
    // All events to the set
    event_codes.insert(event_codes.begin(), overflow_event);
    num_events = event_codes.size();
@@ -147,8 +137,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
    }
 
    /* Start counting */
-   if ((retval = PAPI_start(event_set)) != PAPI_OK)
-      mPAPI_mex_error_with_reason("Failed to start the profiling.", retval);
+   // if ((retval = PAPI_start(event_set)) != PAPI_OK)
+   //    mPAPI_mex_error_with_reason("Failed to start the profiling.", retval);
 
    // The output is a structure with fields:
    //    1) Id of the event set
@@ -157,13 +147,22 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
    //    4) The threshold of the overflow sampling
    //    5) Number of measured events (including the threshold event)
    mwSize dims[2] = {1, 1};
-   const char *field_names[] = {"event_set", "overflow_event_name", "overflow_event_code", "threshold_value", "num_events"};
-   mxArray *profileStruct = mxCreateStructArray(2, dims, 5, field_names);
+   const char *field_names[] = {
+       "event_set",
+       "overflow_event_name",
+       "overflow_event_code",
+       "perf_events",
+       "threshold_value",
+       "num_events",
+       "trace_file"};
+   mxArray *profileStruct = mxCreateStructArray(2, dims, 7, field_names);
    mxSetFieldByNumber(profileStruct, 0, 0, mPAPI_create_int32_scalar(event_set));
    mxSetFieldByNumber(profileStruct, 0, 1, mxCreateString(event_name));
    mxSetFieldByNumber(profileStruct, 0, 2, mPAPI_create_int32_scalar(overflow_event));
-   mxSetFieldByNumber(profileStruct, 0, 3, mPAPI_create_int32_scalar(threshold_value));
-   mxSetFieldByNumber(profileStruct, 0, 4, mPAPI_create_int32_scalar(num_events));
+   mxSetFieldByNumber(profileStruct, 0, 3, mxCreateString(prepare_trace_file_header(event_names).c_str()));
+   mxSetFieldByNumber(profileStruct, 0, 4, mPAPI_create_int32_scalar(threshold_value));
+   mxSetFieldByNumber(profileStruct, 0, 5, mPAPI_create_int32_scalar(num_events));
+   mxSetFieldByNumber(profileStruct, 0, 6, mxCreateString(trace_file_name.c_str()));
    plhs[0] = mxDuplicateArray(profileStruct);
 
    mxDestroyArray(profileStruct);
