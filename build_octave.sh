@@ -15,3 +15,7 @@ $MEX --mex -I/usr/local/include ../mPAPI_enumNativeEvents.cpp -L/usr/local/lib/ 
 $MEX --mex -I/usr/local/include ../mPAPI_register.cpp -L/usr/local/lib/ -lpapi -output mPAPI_register
 $MEX --mex -I/usr/local/include ../mPAPI_tic.cpp -L/usr/local/lib/ -lpapi -output mPAPI_tic
 $MEX --mex -I/usr/local/include ../mPAPI_toc.cpp -L/usr/local/lib/ -lpapi -output mPAPI_toc
+# Traces
+$MEX --mex -I/usr/local/include ../mPAPI_trace_register.cpp -L/usr/local/lib/ -lpapi -output mPAPI_trace_register
+$MEX --mex -I/usr/local/include ../mPAPI_trace_tic.cpp -L/usr/local/lib/ -lpapi -output mPAPI_trace_tic
+$MEX --mex -I/usr/local/include ../mPAPI_trace_toc.cpp -L/usr/local/lib/ -lpapi -output mPAPI_trace_toc

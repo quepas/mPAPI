@@ -46,7 +46,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     }
 
     std::vector<int> event_codes;
-    mPAPI_event_names_cell_to_codes(prhs[0], num_events, event_codes);
+    std::vector<std::string> event_names;
+    mPAPI_event_names_cell_to_codes(prhs[0], num_events, event_codes, event_names);
 
     // Create an event set
     int event_set = PAPI_NULL;

@@ -7,6 +7,18 @@
 #include <mex.h>
 #include <papi.h>
 
+mxArray *mPAPI_create_int32_scalar(int value)
+{
+    mxArray *mx_value = mxCreateNumericMatrix(1, 1, mxINT32_CLASS, mxREAL);
+    ((int *)mxGetPr(mx_value))[0] = value;
+    return mx_value;
+}
+
+int mPAPI_get_int32_scalar(mxArray *array)
+{
+    return *((int *)mxGetData(array));
+}
+
 void mPAPI_remove_event_code(std::vector<int> &event_codes, int event_code_to_remove)
 {
     event_codes.erase(
@@ -57,7 +69,7 @@ mxArray *mPAPI_to_string_cell_array(std::vector<std::string> names)
     return native_events;
 }
 
-void mPAPI_event_names_cell_to_codes(const mxArray *names_in_cell, int num_events, std::vector<int> &out_codes)
+void mPAPI_event_names_cell_to_codes(const mxArray *names_in_cell, int num_events, std::vector<int> &out_codes, std::vector<std::string> &out_names)
 {
     if (!mxIsCell(names_in_cell))
     {
@@ -79,6 +91,7 @@ void mPAPI_event_names_cell_to_codes(const mxArray *names_in_cell, int num_event
             else
             {
                 out_codes.push_back(event_code);
+                out_names.push_back(event_name);
             }
         }
     }
