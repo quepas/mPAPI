@@ -111,8 +111,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
    {
       mPAPI_mex_warn_with_reason("Failed to convert event name to code", retval);
    }
-   // Write header of the trace file
-   trace_file << prepare_trace_file_header(event_names) << std::endl;
    // All events to the set
    event_codes.insert(event_codes.begin(), overflow_event);
    num_events = event_codes.size();

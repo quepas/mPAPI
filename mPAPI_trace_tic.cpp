@@ -16,7 +16,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
     std::ofstream trace_file(trace_file_name, std::fstream::app);
     trace_file << "@trace:" << header << std::endl;
-    //trace_file << perf_events << std::endl;
+    trace_file << "@perf_events:" << perf_events << std::endl;
     trace_file.close();
 
     int retval;
