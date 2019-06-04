@@ -20,7 +20,7 @@ trace2csv <- function(trace_path, csv_path, explicit_time = F) {
   }
   df_finish_subtrace <- function(raw_subtrace, trace_id_val, subtrace, csv_file, csv_has_header) {
     # add time column
-    raw_subtrace <- data.frame(raw_subtrace)
+    raw_subtrace <- as.data.frame(raw_subtrace)
     time_series <- raw_subtrace[[1]]
     # Drop first column if not an explicit time
     if (!explicit_time) {
