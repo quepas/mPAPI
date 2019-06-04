@@ -4,6 +4,7 @@ library(stringr)
 
 trace2csv <- function(trace_path, csv_path, explicit_time = F) {
   trace_id_val <- 1
+  csv_has_header <- F
   
   df_add_perf_events <- function(str_line) {
     perf_events <- str_split(str_line, ":", n = 2)[[1]][2]
@@ -17,7 +18,7 @@ trace2csv <- function(trace_path, csv_path, explicit_time = F) {
     values <- as.numeric(str_split(str_line, ",")[[1]])
     rbind(raw_subtrace, values)
   }
-  df_finish_subtrace <- function(raw_subtrace, trace_id_val, subtrace) {
+  df_finish_subtrace <- function(raw_subtrace, trace_id_val, subtrace, csv_file, csv_has_header) {
     # add time column
     raw_subtrace <- data.frame(raw_subtrace)
     raw_subtrace[["time"]] <- raw_subtrace[[1]]
@@ -61,28 +62,15 @@ trace2csv <- function(trace_path, csv_path, explicit_time = F) {
     if (!explicit_time) {
       df <- df %>% select(-10)
     }
-    df
+    write.table(df, csv_file, sep=",", quote = F, row.names = F, col.names = !csv_has_header)
   }
-  
-  result <- data.frame(
-    trace_id = numeric(),
-    matlab = factor(),
-    threads = factor(),
-    process = factor(),
-    benchmark = factor(),
-    version = factor(),
-    N = factor(),
-    in_process = factor(),
-    time = numeric(),
-    metrics = factor(),
-    value = numeric()
-  )
   
   is_values_row <- function(str_line) {
     n <- strtoi(substr(str_line, 1, 1))
     !is.na(n)
   }
   
+  csv_file  <- file(csv_path, open = "w")
   trace_file  <- file(trace_path, open = "r")
   while (length(str_line <-
                 readLines(trace_file, n = 1, warn = FALSE)) > 0) {
@@ -96,12 +84,11 @@ trace2csv <- function(trace_path, csv_path, explicit_time = F) {
       raw_subtrace <- df_add_perf_events(str_line)
     }
     else if (str_starts(str_line, "@trace_end")) {
-      result <-
-        bind_rows(result, df_finish_subtrace(raw_subtrace, trace_id_val, subtrace))
+      df_finish_subtrace(raw_subtrace, trace_id_val, subtrace, csv_file, csv_has_header)
+      csv_has_header <- T
       trace_id_val <- trace_id_val + 1
     }
   }
-  
   close(trace_file)
-  write.csv(result, csv_path, quote = F, row.names = F)
+  close(csv_file)
 }
