@@ -21,11 +21,21 @@ trace2csv <- function(trace_path, csv_path, explicit_time = F) {
   df_finish_subtrace <- function(raw_subtrace, trace_id_val, subtrace, csv_file, csv_has_header) {
     # add time column
     raw_subtrace <- data.frame(raw_subtrace)
-    raw_subtrace[["time"]] <- raw_subtrace[[1]]
-    # Consider time explicit (9th)
-    column_offset <- ifelse(explicit_time, 10, 11);
+    time_series <- raw_subtrace[[1]]
+    # Drop first column if not an explicit time
+    if (!explicit_time) {
+      raw_subtrace <- raw_subtrace[-1]
+    }
+    # Compute diff for the rest columns
+    raw_subtrace <- raw_subtrace %>%
+      mutate_all(function(x) {
+        x = x - lag(x, default = 0)
+      })
     # prepare the df
     df <- raw_subtrace %>%
+      mutate(time=time_series) %>%
+      group_by(time) %>%
+      gather("metrics", "value", -time) %>%
       mutate(
         trace_id = trace_id_val,
         matlab = subtrace[2],
@@ -36,14 +46,6 @@ trace2csv <- function(trace_path, csv_path, explicit_time = F) {
         N = subtrace[7],
         in_process = subtrace[8]
       ) %>%
-      group_by(trace_id,
-               matlab,
-               threads,
-               process,
-               benchmark,
-               version,
-               N,
-               in_process) %>%
       select(trace_id,
              matlab,
              threads,
@@ -53,15 +55,7 @@ trace2csv <- function(trace_path, csv_path, explicit_time = F) {
              N,
              in_process,
              time,
-             everything()) %>%
-      mutate_at(function(x) {
-        x = x - lag(x, default = 0)
-      },
-      .vars = 10:(ncol(raw_subtrace) + 8)) %>%
-      gather("metrics", "value", column_offset:(ncol(raw_subtrace) + 8))
-    if (!explicit_time) {
-      df <- df %>% select(-10)
-    }
+             everything())
     write.table(df, csv_file, sep=",", quote = F, row.names = F, col.names = !csv_has_header)
   }
   
