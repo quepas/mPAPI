@@ -2,9 +2,10 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 
-trace2csv <- function(trace_path, csv_path, explicit_time = F) {
+trace2csv <- function(trace_path, csv_path, explicit_time = F, start_from_in_process = 1) {
   trace_id_val <- 1
   csv_has_header <- F
+  omit_trace <- F
   
   df_add_perf_events <- function(str_line) {
     perf_events <- str_split(str_line, ":", n = 2)[[1]][2]
@@ -54,8 +55,9 @@ trace2csv <- function(trace_path, csv_path, explicit_time = F) {
              version,
              N,
              in_process,
+             metrics,
              time,
-             everything())
+             value)
     write.table(df, csv_file, sep=",", quote = F, row.names = F, col.names = !csv_has_header)
   }
   
@@ -68,16 +70,17 @@ trace2csv <- function(trace_path, csv_path, explicit_time = F) {
   trace_file  <- file(trace_path, open = "r")
   while (length(str_line <-
                 readLines(trace_file, n = 1, warn = FALSE)) > 0) {
-    if (is_values_row(str_line)) {
+    if (!omit_trace && is_values_row(str_line)) {
       raw_subtrace <- df_fill_subtrace(str_line, raw_subtrace) 
     }
     else if (str_starts(str_line, "@trace_start")) {
       subtrace <- str_split(str_line, ":")[[1]]
+      omit_trace <- subtrace[8] < start_from_in_process
     }
-    else if (str_starts(str_line, "@perf_events")) {
+    else if (!omit_trace && str_starts(str_line, "@perf_events")) {
       raw_subtrace <- df_add_perf_events(str_line)
     }
-    else if (str_starts(str_line, "@trace_end")) {
+    else if (!omit_trace && str_starts(str_line, "@trace_end")) {
       df_finish_subtrace(raw_subtrace, trace_id_val, subtrace, csv_file, csv_has_header)
       csv_has_header <- T
       trace_id_val <- trace_id_val + 1
