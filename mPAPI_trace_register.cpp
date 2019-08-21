@@ -76,6 +76,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
    if (!PAPI_is_initialized())
       PAPI_library_init(PAPI_VER_CURRENT);
 
+   if (!mexIsLocked())
+   {
+      mexLock();
+   }
    /**
     * Create an event set
     */

@@ -9,6 +9,11 @@
  */
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
+    if (!mexIsLocked())
+    {
+        mexLock();
+    }
+
     int event_set = mPAPI_get_int32_scalar(mxGetFieldByNumber(prhs[0], 0, 0));
     int num_events = mPAPI_get_int32_scalar(mxGetFieldByNumber(prhs[0], 0, 5));
     std::string trace_file_name = mxArrayToString(mxGetFieldByNumber(prhs[0], 0, 6));
