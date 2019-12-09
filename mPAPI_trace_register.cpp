@@ -73,8 +73,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
    std::string trace_file_name = mxArrayToString(prhs[3]);
    trace_file.open(trace_file_name, std::fstream::app);
 
-   if (!PAPI_is_initialized())
-      PAPI_library_init(PAPI_VER_CURRENT);
+   int retval;
+   if (!PAPI_is_initialized()) {
+        retval = PAPI_library_init(PAPI_VER_CURRENT);
+        if (retval != PAPI_VER_CURRENT && retval > 0) {
+            mPAPI_mex_error_with_reason("PAPI initialisation failed", retval);
+        }
+    }
 
    if (!mexIsLocked())
    {
@@ -84,7 +89,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     * Create an event set
     */
    int event_set = PAPI_NULL;
-   int retval;
    if ((retval = PAPI_create_eventset(&event_set)) != PAPI_OK)
    {
       mPAPI_mex_error_with_reason("Failed to create an event set.", retval);
