@@ -15,7 +15,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     int retval;
     if (!PAPI_is_initialized()) {
         retval = PAPI_library_init(PAPI_VER_CURRENT);
-        if (retval != PAPI_VER_CURRENT && retval > 0) {
+        if (retval != PAPI_VER_CURRENT) {
             mPAPI_mex_error_with_reason("PAPI initialisation failed", retval);
         }
     }
