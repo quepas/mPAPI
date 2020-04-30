@@ -1,4 +1,6 @@
-# mPAPI
+# Deprecated: Please use multi-language [pep-talk](https://github.com/quepas/pep-talk)
+
+## mPAPI
 
 Simple [**MATLAB**](https://www.mathworks.com/products/matlab.html)/[**Octave**](https://www.gnu.org/software/octave/) API for [**PAPI**](http://icl.cs.utk.edu/papi/) (Performance Application Programming Interface).
 
